@@ -1,0 +1,10 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo-db?serverTimezone=GMT&characterEncoding=utf-8&useUnicode=true
+    username: root
+    password: QAZqaz123
+  resources:
+    static-locations: classpath:/templates  #访问静态页面
