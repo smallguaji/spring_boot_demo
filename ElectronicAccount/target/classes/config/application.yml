@@ -1,0 +1,11 @@
+server:
+  port: 8888  #mybatis相关配置 数据源
+spring:
+  datasource:    username: root    password: QAZqaz123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.108.1:3306/electronic_account?serverTimezone=GMT&characterEncoding=utf-8&useUnicode=true&tinyInt1isBit=false&allowMultiQueries=true
+  resources:
+    static-locations: classpath:/templates      #访问静态页面
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml     #配置mapper文件的扫描路径
