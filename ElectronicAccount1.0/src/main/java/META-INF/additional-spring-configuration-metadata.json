@@ -1,0 +1,107 @@
+{"properties": [
+  {
+    "name": "spring.mybatis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mybatis'"
+  },
+  {
+    "name": "spring.datasource.initialSize",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.initialSize'"
+  },
+  {
+    "name": "spring.datasource.minIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.minIdle'"
+  },
+  {
+    "name": "spring.datasource.maxActive",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.maxActive'"
+  },
+  {
+    "name": "spring.datasource.maxWait",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.maxWait'"
+  },
+  {
+    "name": "spring.datasource.timeBetweenEvictionRunsMillis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.timeBetweenEvictionRunsMillis'"
+  },
+  {
+    "name": "spring.datasource.minEvictableIdleTimeMillis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.minEvictableIdleTimeMillis'"
+  },
+  {
+    "name": "spring.datasource.validationQuery",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.validationQuery'"
+  },
+  {
+    "name": "spring.datasource.validationQueryTimeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.validationQueryTimeout'"
+  },
+  {
+    "name": "spring.datasource.testWhileIdle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.testWhileIdle'"
+  },
+  {
+    "name": "spring.datasource.testOnBorrow",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.testOnBorrow'"
+  },
+  {
+    "name": "spring.datasource.testOnReturn",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.testOnReturn'"
+  },
+  {
+    "name": "spring.datasource.poolPreparedStatements",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.poolPreparedStatements'"
+  },
+  {
+    "name": "spring.datasource.maxPoolPreparedStatementPerConnectionSize",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.maxPoolPreparedStatementPerConnectionSize'"
+  },
+  {
+    "name": "spring.datasource.removeAbandoned",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.removeAbandoned'"
+  },
+  {
+    "name": "spring.datasource.removeAbandonedTimeoutMillis",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.removeAbandonedTimeoutMillis'"
+  },
+  {
+    "name": "spring.datasource.logAbandoned",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.logAbandoned'"
+  },
+  {
+    "name": "spring.datasource.logDifferentThread",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.logDifferentThread'"
+  },
+  {
+    "name": "spring.datasource.filters",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.filters'"
+  },
+  {
+    "name": "spring.datasource.connectionProperties",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.connectionProperties'"
+  },
+  {
+    "name": "spring.datasource.useGlobalDataSourceStat",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.useGlobalDataSourceStat'"
+  }
+]}

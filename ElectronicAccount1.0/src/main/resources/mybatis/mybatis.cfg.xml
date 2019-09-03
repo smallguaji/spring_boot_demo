@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 配置mybatis在执行sql语句时，在控制台打印出该语句的内容 -->
+  	<settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
+    
+	<!-- 实体类别名，简化mapper文件中参数类型的写法  -->
+	<typeAliases>
+		<typeAlias alias="User" type="com.example.demo.pojo.User"/>
+		<typeAlias alias="Result" type="com.example.demo.pojo.Result"/>
+		<typeAlias alias="JSONObject" type="com.alibaba.fastjson.JSONObject"/>
+		<typeAlias alias="Map" type="java.util.Map"/>
+		<typeAlias alias="TableMeta" type="com.example.demo.pojo.TableMeta"/>
+		<typeAlias alias="String" type="java.lang.String"/>
+		<typeAlias alias="Permission" type="com.example.demo.pojo.Permission"/>
+		<typeAlias alias="Int" type="java.lang.Integer"/>
+		<typeAlias alias="List" type="java.util.List"/>
+		<typeAlias alias="Object" type="java.lang.Object"/>
+		
+	</typeAliases>
+    
+    <typeHandlers>
+    	<typeHandler handler="com.example.demo.handler.JsonArrayHandler"/>
+    	<typeHandler handler="com.example.demo.handler.JsonObjectHandler"/>
+    </typeHandlers>
+    
+	<!-- 定义映射文件 -->
+	<mappers>
+		<mapper resource="mapper/GeneralOpMapper.xml"/> 
+		<mapper resource="mapper/TableOpMapper.xml"/> 
+	</mappers>
+ 
+</configuration>

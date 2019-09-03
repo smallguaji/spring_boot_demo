@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.TableOpDAO">
+	<cache size="1024" flushInterval="60000" eviction="LRU" readOnly="false"></cache>
+	
+	<!-- 创建新的权限记录 -->
+   	<insert id="addPermission">
+   		INSERT INTO electronic_account.permission
+   		(userid, tableid, level)
+   		VALUES
+   		<foreach collection="list" item="item" index="index" separator=",">
+   			(#{item.userid}, #{item.tableid}, #{item.level})
+   		</foreach>
+   	</insert>
+   	
+   	<!-- 创建新的历史记录 -->
+   	<insert id="addProvenance">
+   		INSERT INTO electronic_account.provenance
+   		(tableid, tableindex, originalcontent, newcontent, operationtype, time, userid)
+   		VALUES
+   		<foreach collection="list" item="item" index="index" separator=",">
+   			(#{item.tableid,jdbcType=VARCHAR}, #{item.tableindex,jdbcType=INTEGER}, #{item.originalcontent,jdbcType=OTHER,typeHandler=com.example.demo.handler.JsonObjectHandler}, #{item.newcontent,jdbcType=OTHER,typeHandler=com.example.demo.handler.JsonObjectHandler}, #{item.operationtype,jdbcType=INTEGER}, #{item.time,jdbcType=TIMESTAMP}, #{item.userid,jdbcType=VARCHAR})
+   		</foreach>
+   	</insert>
+   	
+   	<!-- 验证权限信息 -->
+   	<select id="verifyPermission_step_one" parameterType="Permission" resultType="INT">
+   		SELECT 1 FROM electronic_account.permission 
+   		WHERE userid = #{permission.userid} 
+   		AND tableid = #{permission.tableid} 
+   		AND level = #{permission.level}
+   	</select>
+   	<select id="verifyPermission_step_two" parameterType="Permission" resultType="INT">
+   		SELECT t.permissionlevel FROM electronic_account.user u, electronic_account.table_list t
+   		WHERE u.userid = #{permission.userid} 
+   		AND t.tableid = #{permission.tableid} 
+   		AND u.level &gt;= t.level
+   	</select>
+	
+	
+	<!-- 获取台账内数据 -->	
+	<select id="getTableDetail" parameterType="Permission" resultType="Map">
+		SELECT * 
+		FROM electronic_account.`${permission.tableid}`
+		WHERE status = 1
+	</select>
+	
+	<!-- 向台账中添加数据 -->
+	<insert id="addRecords" useGeneratedKeys="true" keyProperty="c_id">
+		INSERT INTO `electronic_account`.#{tableid}
+		<foreach collection="columns.keys" item="key" index="index" open="(" close=")" separator=",">
+		</foreach>
+		VALUES
+		<foreach collection="list" item="content" index="index" separator=",">
+			(null, #{content.a}, #{content.b})
+		</foreach>
+	</insert>
+	
+	<!-- 删除已有台账 -->
+	<update id="deleteTable" parameterType="Permission">
+		UPDATE electronic_account.table_list 
+		SET tablestatus = 0 
+		WHERE tableid = #{permission.tableid}
+	</update>
+	
+	
+	
+	<!-- 测试函数 -->
+	<insert id="insert_test" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="c_id">
+		INSERT INTO `electronic_account`.`tdb764766-4f0a-46a3-99ea-0ba81ab55886`
+		(c_id, a, b)
+		VALUES
+		<foreach collection="list" item="content" index="index" separator=",">
+			(null, #{content.a}, #{content.b})
+		</foreach>
+	</insert>
+
+</mapper>
