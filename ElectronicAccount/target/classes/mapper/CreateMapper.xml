@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.CreateDAO">
+	<cache size="1024" flushInterval="60000" eviction="LRU" readOnly="false"></cache>
+
+   	<insert id="login" parameterType="com.example.demo.entity.TableMeta">
+      	INSERT INTO `electronic_account`.`table_list` 
+      	(`tableid`, `tablename`, `creatorid`, `createtime`, `level`, `tablestatus`) 
+      	VALUES (#{tableid}, #{tablename}, #{creatorid}, #{createtime}, #{level}, #{tablestatus})
+   	</insert>
+
+</mapper>

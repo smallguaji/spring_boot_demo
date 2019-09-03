@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.SearchDAO">
+	<cache size="1024" flushInterval="60000" eviction="LRU" readOnly="false"></cache>
+	
+	<resultMap type="com.example.demo.entity.User" id="UserResult">
+		<id column="userid" property="userid"/>
+        <result column="username" property="username"/>
+        <result column="officenum" property="officenum"/>
+        <result column="headofficenum" property="headofficenum"/>
+        <result column="department" property="department"/>
+        <result column="team" property="team"/>
+        <result column="email" property="email"/>
+        <result column="level" property="level"/>
+   	</resultMap>
+   	<select id="findUserByOfficenum" parameterType="com.example.demo.entity.User" resultMap="UserResult">
+		SELECT * 
+		FROM electronic_account.user u 
+		WHERE u.officenum = #{officenum}
+   	</select>
+      
+
+   	<select id="autoSearchOwnedTable" parameterType="com.example.demo.entity.User" resultType="com.alibaba.fastjson.JSONObject">
+   		SELECT tableid, tablename, createtime, level 
+   	  	FROM electronic_account.table_list t 
+   	  	WHERE t.creatorid = #{userid} AND t.tablestatus = 1
+   	</select>
+   
+
+</mapper>
