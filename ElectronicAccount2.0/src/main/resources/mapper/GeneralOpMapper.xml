@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.GeneralOpDAO">
+	<cache size="1024" flushInterval="60000" eviction="LRU" readOnly="false"></cache>
+	
+	<resultMap type="User" id="UserResult">
+		<result column="userid" property="userid"/>
+        <result column="username" property="username"/>
+        <result column="officenum" property="officenum"/>
+        <result column="headofficenum" property="headofficenum"/>
+        <result column="department" property="department"/>
+        <result column="departmentname" property="departmentname"/>
+        <result column="team" property="team"/>
+        <result column="teamname" property="teamname"/>
+        <result column="email" property="email"/>
+        <result column="level" property="level"/>
+   	</resultMap>
+   	<select id="findUserByOfficenum" parameterType="User" resultMap="UserResult">
+		SELECT u.userid, u.headofficenum, u.officenum, u.username, u.department, u.level, u.email, u.team, d.departmentname, t.teamname  
+		FROM electronic_account.user u, electronic_account.department d, electronic_account.team t
+		WHERE u.officenum = #{officenum}
+		AND u.department = d.departmentid
+		AND u.team = t.teamid
+   	</select>
+      
+   	<select id="searchOwnedTableList" parameterType="User" resultType="Map">
+   		SELECT t.tableid, t.tablename, t.createtime, t.level, t.permissionlevel
+   	  	FROM electronic_account.table_list t 
+   	  	<where>
+   	  		t.creatorid = #{userid} AND
+   	  		t.tablestatus = 1
+   	  	</where>
+   	</select>
+   	
+   	<select id="searchTableList" parameterType="Map" resultType="Map">
+   		SELECT t.tableid, t.tablename, t.createtime, t.creatorname, t.level, t.permissionlevel
+   		FROM electronic_account.table_list t
+		WHERE t.level &lt;= #{map.userlevel}
+		AND t.tablestatus = 1
+		<if test="map.creatorname != null">
+	   		AND INSTR(t.creatorname, #{map.creatorname})
+	   	</if>
+	  	<if test="map.tablename != null">
+	   		AND INSTR(t.tablename, #{map.tablename})
+	   	</if>
+	   	<if test="map.startdate != null and map.enddate != null">
+	   		AND DATE_FORMAT(t.createtime, '%Y-%m-%d %T') BETWEEN '#{map.startdate}' AND '#{map.enddate}'
+	   	</if>
+	   	
+	   	UNION ALL
+	   	
+   		SELECT t.tableid, t.tablename, t.createtime, t.creatorname, t.level, t.permissionlevel
+   		FROM electronic_account.table_list t
+		WHERE t.level > #{map.userlevel}
+		AND t.tablestatus = 1
+		<if test="map.creatorname != null">
+	   		AND INSTR(t.creatorname, #{map.creatorname})
+	   	</if>
+	  	<if test="map.tablename != null">
+	   		AND INSTR(t.tablename, #{map.tablename})
+	   	</if>
+	   	<if test="map.startdate != null and map.enddate != null">
+	   		AND DATE_FORMAT(t.createtime, '%Y-%m-%d %T') BETWEEN '#{map.startdate}' AND '#{map.enddate}'
+	   	</if>
+	   		AND EXISTS(
+	   			SELECT 1 FROM electronic_account.permission p 
+	   			WHERE p.userid = #{map.userid} 
+	   			AND p.tableid = t.tableid
+	   		)
+   	</select>
+   	
+   	<!-- 创建一个新表 -->
+   	<update id="addNewTable" parameterType="Map">
+   		CREATE TABLE `${tablemeta.tableid}`(
+   			c_id INT NOT NULL AUTO_INCREMENT,
+   			<foreach collection="map.entrySet()" index="key" item="value" separator="," close=",">
+   				${key} ${value} NULL
+   			</foreach>
+   			status TINYINT(1) NOT NULL DEFAULT 1,
+   			`index` INT NULL DEFAULT NULL,
+   			PRIMARY KEY (c_id)
+   		)
+   	</update>
+   	
+   	<!-- 在tablelist中添加新表的记录 -->
+   	<insert id="createNewTable" parameterType="TableMeta">
+      	INSERT INTO electronic_account.table_list 
+      	(tableid, tablename, creatorid, creatorname, createtime, level, permissionlevel, tablestatus) 
+      	VALUES (#{tableid}, #{tablename}, #{creatorid}, #{creatorname}, #{createtime}, #{level}, #{permissionlevel}, 1)
+   	</insert>
+   	
+   	<!-- 创建新的权限记录 -->
+   	<insert id="addPermission">
+   		INSERT INTO electronic_account.permission
+   		(userid, tableid, level)
+   		VALUES
+   		<foreach collection="list" item="item" index="index" separator=",">
+   			(#{item.userid}, #{item.tableid}, #{item.level})
+   		</foreach>
+   	</insert>
+   	
+   	<!-- 创建新的历史记录 -->
+   	<insert id="addProvenance">
+   		INSERT INTO electronic_account.provenance
+   		(tableid, tableindex, originalcontent, newcontent, operationtype, time, userid)
+   		VALUES
+   		(#{tableid,jdbcType=VARCHAR}, #{tableindex,jdbcType=INTEGER}, #{originalcontent,jdbcType=OTHER,typeHandler=com.example.demo.handler.JsonObjectHandler}, #{newcontent,jdbcType=OTHER,typeHandler=com.example.demo.handler.JsonObjectHandler}, #{operationtype,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR})
+   	</insert>
+   	
+   	<!-- 获得某个用户关于某张表的单独权限 -->
+   	<select id="getPermissionLevel" resultType="Int">
+		SELECT IFNULL(MAX(p.level), -1) AS level
+		FROM electronic_account.permission p
+		WHERE p.userid = #{user.userid} AND p.tableid = #{tablemeta.tableid}
+	</select>
+	
+	<select id="searchHistoricalOperatedTableList" parameterType="User" resultType="Map">
+		SELECT tableid, tablename, createtime, level, permissionlevel 
+		FROM electronic_account.table_list 
+		WHERE tableid IN (
+			SELECT tableid FROM (SELECT tableid FROM electronic_account.provenance
+			WHERE userid = #{userid}
+			GROUP BY tableid
+			ORDER BY MAX(time) DESC LIMIT 3) AS `tmp`
+	   	)
+	</select>
+
+</mapper>
