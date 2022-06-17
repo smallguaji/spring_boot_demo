@@ -60,7 +60,7 @@
 		<dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.59</version>
+            <version>1.2.83</version>
         </dependency>
 
 		<!-- 前端页面框架，用于简便接收后台数据显示在前端上 -->
